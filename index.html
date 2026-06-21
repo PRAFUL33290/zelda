@@ -115,7 +115,7 @@
       background: var(--card);
       box-shadow: var(--shadow);
       overflow: hidden;
-      backdrop-filter: blur(12px);
+      /* backdrop-filter retiré : trop coûteux au scroll */
     }
 
     .panel-head {
@@ -249,29 +249,30 @@
       padding: 40px 20px 60px;
     }
 
-    /* ── Transitions globales ── */
+    /* ── Transitions globales (GPU only) ── */
     html { scroll-behavior: smooth; }
 
-    .stat, .card, .panel, .crest {
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    .stat, .card {
+      transition: transform 0.25s ease, opacity 0.25s ease;
+      will-change: transform;
     }
 
     .stat:hover, .card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(217, 180, 95, 0.2);
     }
 
     .crest {
       animation: crest-pulse 3.5s ease-in-out infinite;
+      will-change: opacity;
     }
 
     @keyframes crest-pulse {
-      0%, 100% { box-shadow: 0 0 34px rgba(217,180,95,.22); }
-      50%       { box-shadow: 0 0 54px rgba(217,180,95,.45), 0 0 90px rgba(217,180,95,.12); }
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.6; }
     }
 
     /* ── Rows fluides ── */
-    tr td { transition: background 0.2s ease; }
+    tr td { transition: background 0.15s ease; }
 
     /* ── Dot pulsant sur les statuts "Non vu" ── */
     .status::before {
