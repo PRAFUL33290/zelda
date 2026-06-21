@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Suivi des tenues — Zelda Tears of the Kingdom</title>
+  <style>
+    :root {
+      --bg: #08110d;
+      --bg-2: #102119;
+      --card: rgba(10, 25, 18, 0.86);
+      --gold: #d9b45f;
+      --gold-2: #f5d98b;
+      --green: #35d27f;
+      --blue: #62d7ff;
+      --red: #ff755f;
+      --text: #f6efd9;
+      --muted: #c8bfa4;
+      --line: rgba(217, 180, 95, 0.25);
+      --shadow: 0 22px 70px rgba(0, 0, 0, 0.5);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Georgia, 'Times New Roman', serif;
+      background:
+        radial-gradient(circle at top left, rgba(53, 210, 127, 0.22), transparent 36rem),
+        radial-gradient(circle at bottom right, rgba(217, 180, 95, 0.20), transparent 32rem),
+        linear-gradient(135deg, var(--bg), #030604 72%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(217,180,95,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(217,180,95,.06) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.65), transparent 88%);
+    }
+
+    header {
+      position: relative;
+      padding: 56px 20px 34px;
+      text-align: center;
+    }
+
+    .crest {
+      width: 86px;
+      height: 86px;
+      margin: 0 auto 18px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245,217,139,.25), rgba(217,180,95,.04));
+      box-shadow: 0 0 34px rgba(217,180,95,.22);
+      font-size: 42px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.1rem, 6vw, 4.8rem);
+      letter-spacing: 0.03em;
+      color: var(--gold-2);
+      text-shadow: 0 0 20px rgba(217,180,95,.28);
+    }
+
+    .subtitle {
+      max-width: 850px;
+      margin: 16px auto 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.7;
+    }
+
+    main {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto 60px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .stat {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(160deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
+      box-shadow: var(--shadow);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 2.2rem;
+      color: var(--gold-2);
+    }
+
+    .stat span { color: var(--muted); }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 22px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(217, 180, 95, 0.08);
+    }
+
+    .panel-head h2 {
+      margin: 0;
+      color: var(--gold-2);
+      font-size: clamp(1.35rem, 4vw, 2rem);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 11px;
+      color: var(--text);
+      background: rgba(0,0,0,.22);
+      font-size: .88rem;
+      white-space: nowrap;
+    }
+
+    .pill.urgent { color: #ffd2ca; border-color: rgba(255,117,95,.45); }
+    .pill.quest { color: #c8f7dc; border-color: rgba(53,210,127,.45); }
+    .pill.depths { color: #c9eeff; border-color: rgba(98,215,255,.45); }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 980px;
+    }
+
+    th, td {
+      padding: 16px 18px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid rgba(217, 180, 95, 0.14);
+    }
+
+    th {
+      color: var(--gold-2);
+      font-size: .88rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      background: rgba(0,0,0,.2);
+    }
+
+    td { line-height: 1.55; }
+
+    tr:hover td { background: rgba(245, 217, 139, 0.05); }
+
+    .rank {
+      display: inline-grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(217,180,95,.14);
+      color: var(--gold-2);
+      border: 1px solid var(--line);
+      font-weight: bold;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: .88rem;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.26);
+    }
+
+    .status::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 10px var(--red);
+    }
+
+    .check::before { background: var(--green); box-shadow: 0 0 10px var(--green); }
+    .maybe::before { background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+
+    .note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: .96rem;
+      line-height: 1.7;
+      padding: 0 4px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: linear-gradient(160deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
+      padding: 20px;
+      box-shadow: 0 14px 40px rgba(0,0,0,.28);
+    }
+
+    .card h3 { margin: 0 0 10px; color: var(--gold-2); }
+    .card p { margin: 0; color: var(--muted); line-height: 1.65; }
+
+    footer {
+      text-align: center;
+      color: rgba(246,239,217,.62);
+      padding: 40px 20px 60px;
+    }
+
+    @media (max-width: 780px) {
+      .stats, .cards { grid-template-columns: 1fr; }
+      .panel-head { align-items: flex-start; flex-direction: column; }
+      .legend { justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="crest">▲</div>
+    <h1>Compendium des Tenues</h1>
+    <p class="subtitle">Suivi personnel pour <strong>Zelda Tears of the Kingdom</strong>. Tableau basé sur tes captures : les lignes ci-dessous sont les tenues ou pièces que je n’ai pas vues clairement, donc à vérifier dans ton inventaire.</p>
+  </header>
+
+  <main>
+    <section class="stats" aria-label="Résumé">
+      <div class="stat"><strong>14</strong><span>pièces / ensembles à vérifier</span></div>
+      <div class="stat"><strong>3</strong><span>grosses quêtes à terminer</span></div>
+      <div class="stat"><strong>1</strong><span>objectif : collection complète</span></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Tenues manquantes ou non vues</h2>
+        <div class="legend">
+          <span class="pill urgent">Non vue</span>
+          <span class="pill quest">Quête</span>
+          <span class="pill depths">Profondeurs / Labyrinthe</span>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Tenue / pièce</th>
+              <th>Statut</th>
+              <th>Comment l’obtenir</th>
+              <th>Mission / lieu lié</th>
+              <th>Priorité</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="rank">1</span></td>
+              <td><strong>Tenue de batracien complète</strong><br>Masque, vêtement et jambières</td>
+              <td><span class="status">Non vue clairement</span></td>
+              <td>Terminer les enquêtes de Penn aux relais. Chaque étape avance la récompense jusqu’à obtenir l’ensemble complet.</td>
+              <td><strong>Quête :</strong> « En quête de vérité ! » / Gazette des Bois.</td>
+              <td>Très haute</td>
+            </tr>
+            <tr>
+              <td><span class="rank">2</span></td>
+              <td><strong>Chapeau de Cece</strong></td>
+              <td><span class="status">Non vu</span></td>
+              <td>Finir toute l’intrigue politique du village d’Elimith, puis récupérer la récompense de Cece.</td>
+              <td><strong>Quête :</strong> élections d’Elimith / boutique de Cece.</td>
+              <td>Haute</td>
+            </tr>
+            <tr>
+              <td><span class="rank">3</span></td>
+              <td><strong>Capuche hylienne baissée</strong></td>
+              <td><span class="status maybe">À débloquer en variante</span></td>
+              <td>Après la quête de Cece, parle-lui avec la capuche hylienne équipée pour modifier son apparence.</td>
+              <td><strong>Lieu :</strong> village d’Elimith.</td>
+              <td>Moyenne</td>
+            </tr>
+            <tr>
+              <td><span class="rank">4</span></td>
+              <td><strong>Tenue de Tingle complète</strong></td>
+              <td><span class="status maybe">À vérifier</span></td>
+              <td>Suivre les énigmes de Misko et récupérer les trois pièces dans leurs coffres.</td>
+              <td><strong>Mission :</strong> trésors de Misko / grottes.</td>
+              <td>Haute</td>
+            </tr>
+            <tr>
+              <td><span class="rank">5</span></td>
+              <td><strong>Tenue de l’Esprit maléfique</strong></td>
+              <td><span class="status maybe">À vérifier</span></td>
+              <td>Terminer les trois grands labyrinthes. Chaque labyrinthe donne une pièce.</td>
+              <td><strong>Lieux :</strong> labyrinthe d’Akkala, d’Hébra et du désert Gerudo.</td>
+              <td>Haute</td>
+            </tr>
+            <tr>
+              <td><span class="rank">6</span></td>
+              <td><strong>Masque de Midona</strong></td>
+              <td><span class="status">Non vu</span></td>
+              <td>Remporter le combat de l’arène isolée dans les Profondeurs.</td>
+              <td><strong>Lieu :</strong> Colisée isolé, sous l’île d’Eventide.</td>
+              <td>Moyenne</td>
+            </tr>
+            <tr>
+              <td><span class="rank">7</span></td>
+              <td><strong>Casque de Zant</strong></td>
+              <td><span class="status">Non vu</span></td>
+              <td>Vaincre les ennemis de l’arène correspondante dans les Profondeurs.</td>
+              <td><strong>Lieu :</strong> Colisée brûlant, Profondeurs d’Ordinn.</td>
+              <td>Moyenne</td>
+            </tr>
+            <tr>
+              <td><span class="rank">8</span></td>
+              <td><strong>Capuche de Lavio</strong></td>
+              <td><span class="status">Non vue</span></td>
+              <td>Nettoyer l’arène dédiée dans les Profondeurs.</td>
+              <td><strong>Lieu :</strong> Colisée de l’île, Profondeurs sous l’île d’Eventide / zone sud-est.</td>
+              <td>Moyenne</td>
+            </tr>
+            <tr>
+              <td><span class="rank">9</span></td>
+              <td><strong>Armure de soldat complète</strong></td>
+              <td><span class="status maybe">À vérifier</span></td>
+              <td>Explorer le passage royal secret sous le château et récupérer les coffres cachés.</td>
+              <td><strong>Lieu :</strong> passage royal secret, Fort de Guet / château.</td>
+              <td>Moyenne</td>
+            </tr>
+            <tr>
+              <td><span class="rank">10</span></td>
+              <td><strong>Tenue de garde royal complète</strong></td>
+              <td><span class="status maybe">À vérifier</span></td>
+              <td>Explorer le château d’Hyrule : salle des gardes, chambre de Zelda et zones hautes du château.</td>
+              <td><strong>Lieu :</strong> château d’Hyrule.</td>
+              <td>Moyenne</td>
+            </tr>
+            <tr>
+              <td><span class="rank">11</span></td>
+              <td><strong>Casques divins</strong><br>Ruta, Medoh, Rudania, Naboris</td>
+              <td><span class="status maybe">À vérifier</span></td>
+              <td>Explorer les grottes liées aux anciens peuples et aux régions des quatre sages.</td>
+              <td><strong>Lieux :</strong> régions Zora, Piaf, Goron et Gerudo.</td>
+              <td>Collection</td>
+            </tr>
+            <tr>
+              <td><span class="rank">12</span></td>
+              <td><strong>Masque de Korogu</strong></td>
+              <td><span class="status check">Vu dans tes captures</span></td>
+              <td>Tu sembles déjà l’avoir. Garde-le dans le suivi car il sert à détecter les Korogus.</td>
+              <td><strong>Lieu :</strong> Forêt Korogu / Profondeurs selon progression.</td>
+              <td>OK</td>
+            </tr>
+            <tr>
+              <td><span class="rank">13</span></td>
+              <td><strong>Tunique des souvenirs / nouvelle tunique du Prodige</strong></td>
+              <td><span class="status maybe">À vérifier</span></td>
+              <td>Au château d’Hyrule, allumer les deux torches près du trône pour faire apparaître le coffre.</td>
+              <td><strong>Mission :</strong> indice dans le puits de Zelda à Elimith.</td>
+              <td>Très haute</td>
+            </tr>
+            <tr>
+              <td><span class="rank">14</span></td>
+              <td><strong>Tenue Yiga complète</strong></td>
+              <td><span class="status maybe">À vérifier</span></td>
+              <td>Récupérer le masque, le torse et le pantalon dans les planques Yiga, puis infiltrer leur repaire.</td>
+              <td><strong>Mission :</strong> infiltration du clan Yiga.</td>
+              <td>Haute</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <p class="note">Important : tes captures montrent beaucoup de tenues déjà obtenues, mais certaines pièces sont difficiles à identifier à cause de l’angle et du défilement. Cette page est donc pensée comme une checklist intelligente : dès que tu confirmes une pièce, tu peux changer son statut en “obtenu”.</p>
+
+    <section class="cards">
+      <article class="card">
+        <h3>Ordre conseillé</h3>
+        <p>Commence par la quête de Penn pour la tenue de batracien, puis Elimith pour Cece, puis les labyrinthes et les colisées des Profondeurs. C’est le chemin le plus rentable pour compléter vite.</p>
+      </article>
+      <article class="card">
+        <h3>Objectif 100 %</h3>
+        <p>Pour un vrai suivi complet, l’idéal est de refaire trois captures nettes de ton inventaire trié par nom : haut, milieu et bas. Ensuite on remplace les “à vérifier” par un statut exact.</p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    Projet Zelda TOTK — suivi personnel de collection d’armures.
+  </footer>
+</body>
+</html>
