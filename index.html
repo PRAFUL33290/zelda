@@ -249,6 +249,100 @@
       padding: 40px 20px 60px;
     }
 
+    /* ── Transitions globales ── */
+    html { scroll-behavior: smooth; }
+
+    .stat, .card, .panel, .crest {
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .stat:hover, .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(217, 180, 95, 0.2);
+    }
+
+    .crest {
+      animation: crest-pulse 3.5s ease-in-out infinite;
+    }
+
+    @keyframes crest-pulse {
+      0%, 100% { box-shadow: 0 0 34px rgba(217,180,95,.22); }
+      50%       { box-shadow: 0 0 54px rgba(217,180,95,.45), 0 0 90px rgba(217,180,95,.12); }
+    }
+
+    /* ── Rows fluides ── */
+    tr td { transition: background 0.2s ease; }
+
+    /* ── Dot pulsant sur les statuts "Non vu" ── */
+    .status::before {
+      animation: dot-glow 2s ease-in-out infinite;
+    }
+    .check::before, .maybe::before { animation: none; }
+
+    @keyframes dot-glow {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.55; transform: scale(1.35); }
+    }
+
+    /* ── Animations d'entrée au chargement ── */
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    header {
+      animation: fade-up 0.7s ease both;
+    }
+
+    .stats {
+      animation: fade-up 0.7s 0.15s ease both;
+    }
+
+    .panel {
+      animation: fade-up 0.7s 0.28s ease both;
+    }
+
+    .note {
+      animation: fade-up 0.6s 0.38s ease both;
+    }
+
+    .cards {
+      animation: fade-up 0.6s 0.45s ease both;
+    }
+
+    footer {
+      animation: fade-up 0.5s 0.5s ease both;
+    }
+
+    /* ── Lignes du tableau avec délai en cascade ── */
+    tbody tr {
+      opacity: 0;
+      animation: fade-up 0.45s ease forwards;
+    }
+    tbody tr:nth-child(1)  { animation-delay: 0.35s; }
+    tbody tr:nth-child(2)  { animation-delay: 0.42s; }
+    tbody tr:nth-child(3)  { animation-delay: 0.49s; }
+    tbody tr:nth-child(4)  { animation-delay: 0.56s; }
+    tbody tr:nth-child(5)  { animation-delay: 0.63s; }
+    tbody tr:nth-child(6)  { animation-delay: 0.70s; }
+    tbody tr:nth-child(7)  { animation-delay: 0.77s; }
+    tbody tr:nth-child(8)  { animation-delay: 0.84s; }
+    tbody tr:nth-child(9)  { animation-delay: 0.91s; }
+    tbody tr:nth-child(10) { animation-delay: 0.98s; }
+    tbody tr:nth-child(11) { animation-delay: 1.05s; }
+    tbody tr:nth-child(12) { animation-delay: 1.12s; }
+    tbody tr:nth-child(13) { animation-delay: 1.19s; }
+    tbody tr:nth-child(14) { animation-delay: 1.26s; }
+
+    /* ── Pills hover ── */
+    .pill {
+      transition: transform 0.18s ease, background 0.18s ease;
+    }
+    .pill:hover {
+      transform: scale(1.06);
+      background: rgba(255,255,255,.08);
+    }
+
     @media (max-width: 780px) {
       .stats, .cards { grid-template-columns: 1fr; }
       .panel-head { align-items: flex-start; flex-direction: column; }
